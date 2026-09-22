@@ -2,10 +2,18 @@ export async function onRequestPost(context) {
   try {
     const { request, env } = context;
     const body = await request.json();
-    const { links } = body; // Array berisi daftar link tujuan
+    const { links } = body; 
 
-    if (!links || !Array.isArray(links) || links.length === 0) {
-      return new Response(JSON.stringify({ error: "Format data tidak valid" }), {
+    // Jika input dikirim sebagai string panjang dengan baris baru (textarea)
+    let linkArray = [];
+    if (typeof links === 'string') {
+      linkArray = links.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    } else if (Array.isArray(links)) {
+      linkArray = links.map(l => l.trim()).filter(l => l.length > 0);
+    }
+
+    if (linkArray.length === 0) {
+      return new Response(JSON.stringify({ error: "Masukkan minimal satu link!" }), {
         status: 400,
         headers: { "Content-Type": "application/json" }
       });
@@ -13,13 +21,13 @@ export async function onRequestPost(context) {
 
     const domainUtama = new URL(request.url).origin;
 
-    // Gabungkan semua link tujuan dengan tanda koma (sesuai logika dashboard lama)
-    const gabunganLinkTujuan = links.join(",");
+    // Otomatis gabungkan link berjejer ke bawah menjadi format tersimpan dengan koma
+    const gabunganLinkTujuan = linkArray.join(",");
 
-    // Buat satu slug acak unik 6 karakter untuk seluruh kumpulan link tersebut
+    // Buat slug acak unik 6 karakter
     const slug = Math.random().toString(36).substring(2, 8);
     
-    // Simpan ke Cloudflare D1 sebagai 1 kesatuan data
+    // Simpan ke Cloudflare D1
     await env.DB.prepare(
       "INSERT INTO links (slug, link_tujuan) VALUES (?, ?)"
     ).bind(slug, gabunganLinkTujuan).run();

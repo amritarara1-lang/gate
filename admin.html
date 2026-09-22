@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Jembatan Link Generator (Multi-Domain Cloudflare D1)</title>
+</head>
+<body style="background-color: #121212; color: #fff; font-family: sans-serif; padding: 40px; margin: 0;">
+    <div style="max-width: 700px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+        <h2 style="text-align: center; color: #0099ff;">🔗 Bulk Jembatan Link Generator</h2>
+        <p style="color: #aaa; text-align: center; font-size: 14px; margin-top: -10px; margin-bottom: 25px;">Copas banyak link dari web streaming kamu ke sini (Enter). Otomatis jadi 1 link jembatan!</p>
+        
+        <form id="formLink">
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold;">Pilih Domain Jembatan</label>
+                <select id="pilihDomain" style="width: 100%; padding: 12px; background: #252525; color: #fff; border: 1px solid #333; border-radius: 5px; box-sizing: border-box; font-size: 15px; cursor: pointer;">
+                    <option value="AUTO">Domain Saat Ini (Otomatis bawaan Cloudflare)</option>
+                    <option value="https://cdn2.vidsle.site">https://cdn2.vidsle.site</option>
+                    <option value="https://cdn2.aceimgg.site">https://cdn2.aceimgg.site</option>
+                    <option value="https://media.vlduy.fun">https://media.vlduy.fun</option>
+                    <option value="https://s1.vldeys.site">https://s1.vldeys.site</option>
+                    <option value="https://cdn2.videiy.biz.id">https://cdn2.videiy.biz.id</option>
+                    <option value="https://media.viduysc.site">https://media.viduysc.site</option>
+                    <option value="https://cdn2.viduysc.site">https://cdn2.viduysc.site</option>
+                    <option value="https://cdn2.vlduy.fun">https://cdn2.vlduy.fun</option>
+                    <option value="https://vlduy.fun">https://vlduy.fun</option>
+                    <option value="https://vldeys.site">https://vldeys.site</option>
+                    <option value="https://viduysc.site">https://viduysc.site</option>
+                    <option value="https://videiy.biz.id">https://videiy.biz.id</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold;">Masukkan Semua Link Tujuan (Satu Link Per Baris)</label>
+                <textarea id="bulkLinks" rows="8" placeholder="https://domain-tujuan.com/watch/film1&#10;https://domain-tujuan.com/watch/film2&#10;https://domain-tujuan.com/watch/film3" required style="width: 100%; padding: 12px; background: #252525; color: #fff; border: 1px solid #333; border-radius: 5px; box-sizing: border-box; font-family: monospace; resize: vertical;"></textarea>
+            </div>
+            <button type="submit" id="btn" style="width: 100%; padding: 14px; background: #0099ff; color: #fff; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">🚀 Generate 1 Link Jembatan Multi-Video</button>
+        </form>
+
+        <div id="boxHasil" style="display: none; margin-top: 30px; padding: 20px; background: #252525; border: 1px solid #0099ff; border-radius: 5px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <p style="margin: 0; color: #0099ff; font-weight: bold;">Hasil Link Jembatan Siap Tebar di FB:</p>
+                <button type="button" id="btnCopy" style="padding: 6px 15px; background: #22c55e; color: #fff; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">📋 Copy Link</button>
+            </div>
+            <textarea id="hasilLink" style="width: 100%; padding: 12px; background: #1e1e1e; color: #fff; border: 1px solid #444; border-radius: 5px; font-family: monospace; box-sizing: border-box; resize: vertical;" rows="3"></textarea>
+            <small style="color: #aaa; display: block; margin-top: 8px; text-align: center;">💡 Link di atas menggunakan jalur bersih langsung tersimpan di Cloudflare D1.</small>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("btnCopy").addEventListener("click", async () => {
+            const hasilArea = document.getElementById("hasilLink");
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(hasilArea.value);
+                } else {
+                    hasilArea.select();
+                    document.execCommand("copy");
+                }
+                alert("Link berhasil disalin!");
+            } catch (err) {
+                hasilArea.select();
+                document.execCommand("copy");
+                alert("Link berhasil disalin!");
+            }
+        });
+
+        document.getElementById("formLink").addEventListener("submit", async (e) => {
+            e.preventDefault(); 
+            
+            const btn = document.getElementById("btn");
+            const inputArea = document.getElementById("bulkLinks");
+            const boxHasil = document.getElementById("boxHasil");
+            const hasilArea = document.getElementById("hasilLink");
+            const pilihanDomain = document.getElementById("pilihDomain").value;
+
+            btn.disabled = true;
+            btn.innerText = "Sedang Memproses ke Database...";
+            
+            try {
+                const linkList = inputArea.value
+                    .split(/[\n,]+/)
+                    .map(link => link.trim())
+                    .filter(link => link.length > 0);
+
+                if (linkList.length === 0) {
+                    alert("Masukkan minimal satu link!");
+                    btn.disabled = false;
+                    btn.innerText = "🚀 Generate 1 Link Jembatan Multi-Video";
+                    return;
+                }
+
+                // Kirim data ke Cloudflare Pages Functions (/api/generate)
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ links: linkList })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || "Gagal memproses data ke server");
+                }
+
+                if (result.success && result.data && result.data.length > 0) {
+                    let baseUrl = window.location.origin;
+                    if (pilihanDomain !== "AUTO") {
+                        baseUrl = pilihanDomain;
+                    }
+
+                    // Ambil gateway dari hasil API dan sesuaikan domainnya jika user memilih domain kustom
+                    const generatedItem = result.data[0];
+                    const slugPart = generatedItem.gateway.split('/go/')[1];
+                    const hasilFinal = `${baseUrl}/go/${slugPart}`;
+
+                    hasilArea.value = hasilFinal;
+                    boxHasil.style.display = "block";
+                } else {
+                    alert("Gagal menghasilkan link jembatan.");
+                }
+
+            } catch (err) {
+                alert("Terjadi kesalahan sistem: " + err.message);
+                console.error(err);
+            }
+
+            btn.disabled = false;
+            btn.innerText = "🚀 Generate 1 Link Jembatan Multi-Video";
+        });
+    </script>
+</body>
+</html>

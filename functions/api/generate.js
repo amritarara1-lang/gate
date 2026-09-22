@@ -15,8 +15,8 @@ export async function onRequestPost(context) {
     const domainUtama = new URL(request.url).origin;
 
     for (const target of links) {
-      // Buat slug acak unik sepanjang 6 karakter
-      const slug = Math.random().toString(36.substring(2, 8));
+      // Perbaikan pada pembuatan slug acak unik 6 karakter
+      const slug = Math.random().toString(36).substring(2, 8);
       
       // Simpan ke Cloudflare D1
       await env.DB.prepare(

@@ -57,7 +57,7 @@ export async function onRequest(context) {
     <style>
         * { box-sizing: border-box; }
         body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; line-height: 1.5; }
-        .page-wrapper { max-width: 620px; margin: 40px auto; background: #1e293b; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); border: 1px solid #334155; overflow: hidden; }
+        .page-wrapper { max-width: 620px; margin: 40px auto 80px auto; background: #1e293b; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2); border: 1px solid #334155; overflow: hidden; }
         .hero-header { background: linear-gradient(135deg, #2563eb, #1d4ed8); padding: 30px 24px; text-align: center; color: #ffffff; }
         .hero-badge { display: inline-block; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px; }
         .hero-header h1 { font-size: 22px; font-weight: 700; margin: 0 0 8px 0; }
@@ -78,6 +78,45 @@ export async function onRequest(context) {
         .item-action { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #60a5fa; background: rgba(59, 130, 246, 0.1); padding: 6px 12px; border-radius: 6px; }
         
         .footer-info { text-align: center; font-size: 11px; color: #64748b; margin-top: 24px; padding-top: 16px; border-top: 1px solid #334155; }
+
+        /* Floating Telegram Widget */
+        .tg-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #229ED9;
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(34, 158, 217, 0.4);
+            z-index: 999;
+            text-decoration: none;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .tg-float:hover {
+            transform: scale(1.08);
+            background: #1b85b8;
+        }
+        .tg-dot {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            background: #ef4444;
+            border: 2px solid #0f172a;
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+        @keyframes pulse-dot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
     </style>
 </head>
 <body>
@@ -103,6 +142,14 @@ export async function onRequest(context) {
             </div>
         </div>
     </div>
+
+    <!-- Tombol Mengambang Telegram dengan Titik Merah Notifikasi -->
+    <a href="https://t.me/koleksikitaV1" target="_blank" rel="noopener noreferrer" class="tg-float" title="Gabung Channel Telegram">
+        <div class="tg-dot"></div>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.03-1.99 1.27-5.62 3.72-.53.36-1.01.54-1.44.53-.47-.02-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.05-.78 4.11-1.79 6.85-2.97 8.22-3.55 3.91-1.67 4.72-1.96 5.25-1.97.12 0 .39.03.56.17.14.12.18.28.2.4-.02.07-.02.13-.04.22z"/>
+        </svg>
+    </a>
 </body>
 </html>`;
 

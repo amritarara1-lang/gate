@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kilas Berita Harian - Update Informasi Terkini Nusantara</title>
+    <title id="pageTitle">Portal Berita Harian - Update Informasi Terkini</title>
     <meta name="description" content="Portal berita harian yang menyajikan informasi seputar teknologi, gaya hidup, dan rangkuman peristiwa terbaru hari ini.">
     
-    <!-- Open Graph Meta Tags untuk Pratinjau Bersih -->
-    <meta property="og:title" content="Kilas Berita Harian - Update Informasi Terkini Nusantara" />
+    <!-- Open Graph Meta Tags Dinamis -->
+    <meta property="og:title" id="ogTitle" content="Portal Berita Harian - Update Informasi Terkini" />
     <meta property="og:description" content="Simak rangkuman informasi dan berita pilihan yang diperbarui secara berkala." />
     <meta property="og:type" content="article" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800&auto=format&fit=crop&q=60" />
@@ -25,24 +25,45 @@
 </head>
 <body>
     <div class="container">
-        <h1>Perkembangan Teknologi dan Akses Layanan Digital di Era Modern</h1>
-        <div class="date">Dipublikasikan oleh Redaksi Informasi • 2026</div>
+        <h1 id="mainHeading">Perkembangan Teknologi dan Akses Layanan Digital di Era Modern</h1>
+        <div class="date" id="postDate">Dipublikasikan oleh Redaksi Informasi • 2026</div>
         
-        <p>Pemanfaatan infrastruktur digital dan kecepatan akses jaringan kini menjadi pilar utama dalam mendistribusikan berbagai konten multimedia serta informasi cepat kepada masyarakat luas.</p>
+        <p id="par1">Pemanfaatan infrastruktur digital dan kecepatan akses jaringan kini menjadi pilar utama dalam mendistribusikan berbagai konten multimedia serta informasi cepat kepada masyarakat luas.</p>
         
-        <p>Melalui optimalisasi sistem peladen awan, penyedia layanan terus berinovasi untuk menghadirkan kestabilan tayangan serta efisiensi navigasi bagi pengguna perangkat seluler maupun komputer.</p>
+        <p id="par2">Melalui optimalisasi sistem peladen awan, penyedia layanan terus berinovasi untuk menghadirkan kestabilan tayangan serta efisiensi navigasi bagi pengguna perangkat seluler maupun komputer.</p>
 
         <div class="btn-box">
-            <!-- Tombol interaktif untuk pengunjung asli -->
-            <a href="https://tujuan-akhir-kamu.com" class="btn" id="mainLink">Baca Selengkapnya &rarr;</a>
+            <a href="#" class="btn" id="mainLink">Baca Selengkapnya &rarr;</a>
         </div>
     </div>
 
     <script>
-        // Sedikit pengaman tambahan interaksi pengguna
-        document.getElementById('mainLink').addEventListener('click', function(e) {
-            // Bisa disesuaikan jika ingin dilempar dinamis via Supabase atau langsung
-        });
+        // Array variasi teks agar setiap kali di-load bot, isinya berbeda-beda (Menghindari Template Fingerprinting)
+        const variasiJudul = [
+            "Perkembangan Teknologi dan Akses Layanan Digital di Era Modern",
+            "Tinjauan Kinerja Infrastruktur Jaringan Telekomunikasi Global",
+            "Transformasi Sistem Digital dan Media Informasi Masyarakat",
+            "Optimalisasi Protokol Keamanan Jaringan dan Akses Cloud",
+            "Tren Pemanfaatan Teknologi Perangkat Bergerak Tahun Ini"
+        ];
+
+        const variasiParagraf = [
+            "Pemanfaatan infrastruktur digital dan kecepatan akses jaringan kini menjadi pilar utama dalam mendistribusikan berbagai konten multimedia serta informasi cepat kepada masyarakat luas.",
+            "Penerapan arsitektur komputasi awan memberikan dampak signifikan terhadap fleksibilitas pertukaran data serta efisiensi operasional sistem daring.",
+            "Konektivitas nirkabel generasi terbaru terus menunjukkan peningkatan performa guna mendukung aktivitas pertukaran informasi secara real-time.",
+            "Pengembangan protokol komunikasi data masa kini dirancang untuk memberikan tingkat kestabilan yang lebih tinggi bagi pengguna global."
+        ];
+
+        // Acak isi secara otomatis
+        const randomTitle = variasiJudul[Math.floor(Math.random() * variasiJudul.length)];
+        const randomP1 = variasiParagraf[Math.floor(Math.random() * variasiParagraf.length)];
+        const randomP2 = variasiParagraf[Math.floor(Math.random() * variasiParagraf.length)];
+
+        document.getElementById('pageTitle').innerText = randomTitle;
+        document.getElementById('ogTitle').setAttribute('content', randomTitle);
+        document.getElementById('mainHeading').innerText = randomTitle;
+        document.getElementById('par1').innerText = randomP1;
+        document.getElementById('par2').innerText = randomP2;
     </script>
 </body>
 </html>
